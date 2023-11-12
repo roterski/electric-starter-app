@@ -10,10 +10,10 @@
          state (e/watch !state)]
      (e/client
       (ui/button
-       (e/fn [] ;; will get executed twice, since it depends on state
-         (println "client CLICK " state)
-         (e/server
-          (println "server CLICK " state)
-          (swap! !state inc) ;; if we did't update state, e/fn would get called only once
-          ))
+       (e/fn []
+         (let [state (e/snapshot state)]
+           (println "client CLICK " state)
+           (e/server
+            (println "server CLICK " state)
+            (swap! !state inc))))
        (dom/text "button"))))))
